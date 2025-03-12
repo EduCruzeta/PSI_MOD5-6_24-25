@@ -10,15 +10,20 @@ Requesitos funcionais:
 """
 import utils,livros
 
+# Deve estar true quando em testes e False quando em produção
+DEBUG = True
 
 
 def MenuPrincipal():
+    if DEBUG:
+        livros.Configurar()
     op = 0
     while op != 5:
         op = utils.Menu(["Livros","Leitores","Empréstimos/Devoluções","Estatísticas","Sair"],"Menu Principal")
         if op == 5:                 
             break
         if op == 1:
+            print("#-------------------------#")
             livros.MenuLivros()
 
 
