@@ -15,6 +15,12 @@ exemplo_leitores = [{"id":1,"nome":"joaquim","idade":13,"email":"joaquim@gmail.c
 # Campos que nao podem ser editados pelo utilizador
 lista_campos_privados = ["id","infracoes"]
 
+def Get_livro(id):
+    for leitor in leitores:
+        if leitor["id"] == id:
+            return leitor
+    return None
+
 def Configurar():
     """Insere dados de exemplo"""
     leitores.extend(exemplo_leitores)

@@ -17,7 +17,7 @@ def MenuEmprestimos():
         if op == 1:
             Emprestimos()
         if op == 2:
-            Devolucoes()
+            Devolucao()
 
 def Emprestimos():
     # dados do emprestimo a adicionar a lista
@@ -81,17 +81,23 @@ def Emprestimos():
     novo["livro"]["estado"] = "emprestado"
     novo["livro"]["leitor"] = novo["leitor"]
     print("Empréstimo registado com sucesso.")
-    print(novo)
 
 def Devolucao():
     pass
     # ler o id do livro a devolver
+    id_livro = utils.ler_numero_inteiro("Indique o id do livro a devolver: ")
     # verificar se o livro esta emprestado
+    livro = livros.Get_livro(id_livro)
+    if livro == None:
+        print("Não existe nenhum livro com o id indicado.")
+    if livro["estado"] != "emprestado":
+        print("Esse livro não está emprestado")
     # verificar se a devolcao esta dentro do prazo
     # registar se houve infração do leitor
     # atualizar se o nr de emprestimos do livro
+    livro["nr_emprestimos"] += 1
     # mudar o estado do livro
+    livro["estado"] = "disponivel"
+    livro["leitor"] = None
     # mudar o estado de emprestimo
-
-        
-        
+    
