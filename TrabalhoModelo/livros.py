@@ -132,7 +132,6 @@ def Apagar():
             break
     print(f"Livro removido com sucesso. Tem {len(livros)} livros.")
         
-
 # Listar Livros
 def Listar(lista_a_listar):
     """Função para listar todos os livros"""

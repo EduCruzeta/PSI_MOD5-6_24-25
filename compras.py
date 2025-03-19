@@ -11,7 +11,7 @@ precos = [2.5, 3.5, 4.5]
 quantidades=[2, 3, 3]
 compras={}
 
-#TODO: criar um dicionário que combina os dados das listas produtos, precos e quantidades
+#criar um dicionário que combina os dados das listas produtos, precos e quantidades
 for p in range(len(produtos)):
     compras[produtos[p]]= {"quantidade":quantidades[p],"preco":precos[p]}
 
