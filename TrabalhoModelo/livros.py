@@ -2,7 +2,7 @@
 Módulo de gestão dos livros
 """
 import utils
-
+import os
 # lista dos livros
 livros = []
 
@@ -15,7 +15,7 @@ exemplo_livros = [
 ]
 
 # Campos que nao podem ser editados pelo utilizador
-lista_campos_privados = ["id","estado","leitor","nr_emprestimos"]´
+lista_campos_privados = ["id","estado","leitor","nr_emprestimos"]
 
 def Get_livro(id):
     # devolve o livro com base no id indicado
@@ -31,10 +31,10 @@ def Configurar():
 # Menu Livros
 def MenuLivros():
     """Submenu para gerir os livros"""
+    os.system("cls")
     op = 0
     while op != 6:
         op = utils.Menu(["Adicionar","Listar","Editar","Apagar","Pesquisar","Voltar"],"Menu Livros")
-        print("#-------------------------#")
         if op == 6:
             break
         if op == 1:

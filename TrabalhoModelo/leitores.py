@@ -2,20 +2,21 @@
 Módulo de gestão dos leitores
 """
 import utils
-
+import os
 # lista dos leitores
 leitores = []
 
 # lista de leitores de exemplo
 
-exemplo_leitores = [{"id":1,"nome":"joaquim","idade":13,"email":"joaquim@gmail.com","datanascimento":"12/9/2009","infracoes":None},
-                    {"id":2,"nome":"ana","idade":16,"email":"ana@gmail.com","datanascimento":"18/4/2999","infracoes":None},
-                    {"id":3,"nome":"maria","idade":14,"email":"maria@gmail.com","datanascimento":"30/02/2026","infracoes":None}]
+exemplo_leitores = [{"id":1,"nome":"joaquim","idade":13,"email":"joaquim@gmail.com","datanascimento":"12/9/2009","infracoes":""},
+                    {"id":2,"nome":"ana","idade":16,"email":"ana@gmail.com","datanascimento":"18/4/2999","infracoes":""},
+                    {"id":3,"nome":"maria","idade":14,"email":"maria@gmail.com","datanascimento":"30/02/2026","infracoes":""}]
 
 # Campos que nao podem ser editados pelo utilizador
 lista_campos_privados = ["id","infracoes"]
 
-def Get_livro(id):
+def Get_leitores(id):
+    # devolve o leitor com base no id indicado
     for leitor in leitores:
         if leitor["id"] == id:
             return leitor
@@ -28,10 +29,10 @@ def Configurar():
 # Menu Leitores
 def MenuLeitores():
     """Submenu para gerir os leitores"""
+    os.system("cls")
     op = 0
     while op != 6:
         op = utils.Menu(["Adicionar","Listar","Editar","Apagar","Pesquisar","Voltar"],"Menu Leitores")
-        print("#-------------------------#")
         if op == 6:
             break
         if op == 1:
@@ -66,7 +67,7 @@ def Adicionar():
         "email": email,
         "idade" :idade,
         "datanascimento":data_nascimento,
-        "infracoes" :None,
+        "infracoes" :"",
     }
     leitores.append(novo)
     print(f"Leitor novo registrado com sucesso. Tem {len(leitores)} leitores")
@@ -120,6 +121,7 @@ def Apagar():
             leitores.remove(leitor)
             break
     print(f"Leitor removido com sucesso. Tem {len(leitores)} leitores")
+
 # Listar Leitores
 def Listar(lista_a_listar):
     """Função para listar todos os Leitores"""
