@@ -93,6 +93,7 @@ def Devolucao():
     if livro["estado"] != "emprestado":
         print("Esse livro não está emprestado")
     # verificar se a devolcao esta dentro do prazo
+    
     # registar se houve infração do leitor
     # atualizar se o nr de emprestimos do livro
     livro["nr_emprestimos"] += 1
