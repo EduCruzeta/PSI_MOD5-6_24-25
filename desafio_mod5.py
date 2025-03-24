@@ -35,3 +35,18 @@ print(dicionario[codigo]["visitas"])
 
 codigo = int(inpit("codigo visitante"))
 dicionario[codigo]["visitaws"] += 1
+
+maior = 0
+cidade_maior = 0
+
+for chave in dicionario:
+    t_cidade = dicionario[chave]["cidade"]
+    nr_visitas = dicionario[chave]["visitas"]
+    for codigo in dicionario:
+        if t_cidade == dicionario[codigo]["cidade"]:
+            nr_visitas = dicionario[codigo]["visitas"]
+
+if nr_visitas > maior:
+    cidade_maior = t_cidade
+    maior = nr_visitas
+
