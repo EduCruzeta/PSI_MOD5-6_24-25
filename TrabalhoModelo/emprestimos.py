@@ -10,7 +10,7 @@ import os
 emprestimos = []
 
 def MenuEmprestimos():
-    os.system("clear")
+    os.system("cls")
     op = 0
     while op != 4:
         op = utils.Menu(["Empréstimos","Devoluções","Listar","Voltar"],"Menu de empréstimos/devoluções")

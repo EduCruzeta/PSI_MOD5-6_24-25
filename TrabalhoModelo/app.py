@@ -8,7 +8,7 @@ Requesitos funcionais:
     - Empréstimos e devoluções
     - Estatísticas (empréstimos em atraso, top livros, top mês, top leitores, ...)
 """
-import utils,livros,leitores, emprestimos, os
+import utils,livros,leitores, emprestimos, os , estatísticas
 
 # Deve estar true quando em testes e False quando em produção
 DEBUG = True
@@ -29,6 +29,8 @@ def MenuPrincipal():
             leitores.MenuLeitores()
         if op == 3:
             emprestimos.MenuEmprestimos()
+        if op == 4:
+            estatísticas.MenuEstatisticas()
 
 if __name__=="__main__":
     MenuPrincipal()
