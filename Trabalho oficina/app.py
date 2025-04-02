@@ -10,17 +10,15 @@ import utils, os, fichas_clientes, oficina
 # Função responsavel pelo menu principal
 def MenuPrincipal():
     op = 0
-    while op != 4:
+    while op != 3:
         os.system("cls")
         op = utils.Menu(["Ficha cliente","Oficina"],"Menu Principal")
-        if op == 4:                 
+        if op == 3:                 
             break
         if op == 1:
             fichas_clientes.MenuClientes()
         if op == 2:
             oficina.MenuOficina()
-
-
 
 if __name__=="__main__":
     MenuPrincipal()
