@@ -9,6 +9,9 @@ clientes = [
 {"proprietario":"ana silva","veiculos":[{"matricula":"BB-12-CB","modelo":"honda civic","pecas":""}]},
 {"proprietario":"joão","veiculos":[{"matricula":"IA-82-HB","modelo":"jaguar","pecas":""}]}]
 
+# lista de todas as matriculas
+todas_matriculas = ["AA-MM-hh","BB-12-CB","IA-82-HB","AA-67-hj"]
+
 # lista dos campos privados
 lista_campos_privados = ["pecas"]
 
@@ -38,32 +41,62 @@ def Adicionar():
     if op == 2:
         # pesquisar a ficha
         ficha = PesquisarFicha()
+
         # verificar se a ficha existe
         if ficha == None:
             print("Não tem ficha registrada crie uma ficha primeiro.")
             return
+        
+        # perguntar se quer inserir um carro novo
         op = utils.ler_string(1,"deseja inserir um novo carro a sua ficha? s/n")
         if op in "nN":
             return
+        
+        # pedir a matricula do carro
         matricula = utils.ler_string(8,"Introduza a matricula do veículo (aa-bb-cc): ")
         if "-" not in matricula:
             print("Matricula invalida!")
             return
+    
+        # verificar se a matricula ja existe
+        for matricula_verificar in todas_matriculas:
+            if matricula == matricula_verificar:
+                print("Essa matricula já existe.")
+                return
+
+        # adiconar a matricula a lista de matriculas
+        todas_matriculas.append(matricula)
+
         modelo = utils.ler_string(4,"Introduza a marca/modelo do veículo: ")
 
         novo = {"matricula": matricula, "modelo": modelo, "pecas":""}
 
+        # adicionar o novo carro a lista dos carros da ficha do cliente
         ficha["veiculos"].append(novo)
         return
     
     # introduzir o nome do proprietario
+    numeros ="0123456789"
     proprietario = utils.ler_string(3,"Introduza o nome do proprietário do veículo: ")
+    for numero in numeros:
+        if numero in proprietario:
+            print("Nome invalido! O nome não pode conter números.")
+            return
 
-    # introduzir a matricula do carro
+    # pedir a matricula do carro
     matricula = utils.ler_string(8,"Introduza a matricula do veículo (aa-bb-cc): ")
     if "-" not in matricula:
         print("Matricula invalida!")
         return
+    
+    # verificar se a matricula ja existe
+    for matricula_verificar in todas_matriculas:
+        if matricula == matricula_verificar:
+            print("Essa matricula já existe.")
+            return
+        
+    # adiconar a matricula a lista de matriculas
+    todas_matriculas.append(matricula)
 
     # introduzir a marca do carro ou modelo
     modelo = utils.ler_string(4,"Introduza a marca/modelo do veículo: ")
@@ -124,12 +157,11 @@ def Editar():
             
         # guardar o novo valor
         carroeditar[campo] = novo_valor
-        print(ficha_editar)
         print("Edição concluída com sucesso.")
 
 def Apagar():
     """Função responsável por apagar a ficha do cliente"""
-    #verificar se a lista das fichas está vazia
+    # verificar se a lista das fichas está vazia
     if len(clientes) == 0:
         print("Não tem mais fichas de clientes para remover. ")
         return

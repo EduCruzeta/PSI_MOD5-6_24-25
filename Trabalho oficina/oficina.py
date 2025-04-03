@@ -21,7 +21,7 @@ def MenuOficina():
             LevantarCarro()
 
 def LevantarCarro():
-    """Função responsavél para o utilizador pode levantar o carro"""
+    """Função responsavél para o utilizador levantar o carro"""
     # verificar se tem carros na oficina
     if len(manutencoes) == 0:
         print("Não existem carros de momento na oficina.")
@@ -72,9 +72,9 @@ def PedirManutencao():
     else:
         carro = ficha["veiculos"][0]
 
-    # verificar se o carro ja está em manutenção TODO
+    # verificar se o carro ja está em manutenção
     for carro_manutencao in manutencoes:
-        if carro == carro_manutencao:
+        if carro["matricula"] == carro_manutencao["matricula"]:
             print("O carro ja está em manutenção.")
             return
 
@@ -91,7 +91,10 @@ def PedirManutencao():
         if escolha == 3:
             pecas_usar.append("Troca de pneus")
         # verificar se quer fazer mais alterações
-        op = utils.ler_string(1,"Deseja fazer mais alterações s/n: ")
+        op = utils.ler_string(1,f"Tem as seguintas peças {set(pecas_usar)} Deseja fazer mais alterações s/n: ")
+
+    # passar a lista para um set para evitar repetições
+    pecas_usar = set(pecas_usar)
 
     # adicionar quais são as peças que utilizou
     carro["pecas"] = pecas_usar
@@ -100,6 +103,3 @@ def PedirManutencao():
     novo = {"proprietario":ficha["proprietario"],"matricula":carro["matricula"],"modelo":carro["modelo"],"pecas":pecas_usar}
     manutencoes.append(novo)
     print("Registado com sucesso.")
-
-
-print(manutencoes)
