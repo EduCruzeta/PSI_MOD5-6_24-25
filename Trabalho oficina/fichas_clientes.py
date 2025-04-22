@@ -9,7 +9,7 @@ clientes = [
 {"proprietario":"ana silva","veiculos":[{"matricula":"BB-12-CB","modelo":"honda civic","pecas":""}]},
 {"proprietario":"joão","veiculos":[{"matricula":"IA-82-HB","modelo":"jaguar","pecas":""}]}]
 
-# lista de todas as matriculas
+# set de todas as matriculas para evitar repetidas
 todas_matriculas = ["AA-MM-hh","BB-12-CB","IA-82-HB","AA-67-hj"]
 
 # lista dos campos privados
