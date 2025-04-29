@@ -1,4 +1,4 @@
-Módulo 5 - Estruturas de dados Compostas
+Módulo 5/6 - Estruturas de dados Compostas
 
 Escola Secundária Emidio navarro 
 
