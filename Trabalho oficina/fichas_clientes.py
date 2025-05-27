@@ -1,19 +1,16 @@
 """
 Módulo responsável pela gestão das fichas dos clientes
 """
-import utils, os, oficina
+import utils, os, oficina, pickle
 
 # dados de exemplo para as listas dos clientes
-clientes = [
-{"proprietario":"joão alves","veiculos":[{"matricula":"AA-MM-hh","modelo":"Toyota Corolla","pecas":""},{"matricula":"AA-67-hj","modelo":"Toyota prius","pecas":""}]},
-{"proprietario":"ana silva","veiculos":[{"matricula":"BB-12-CB","modelo":"honda civic","pecas":""}]},
-{"proprietario":"joão","veiculos":[{"matricula":"IA-82-HB","modelo":"jaguar","pecas":""}]}]
+clientes = []
 
 # set de todas as matriculas para evitar repetidas
 todas_matriculas = ["AA-MM-hh","BB-12-CB","IA-82-HB","AA-67-hj"]
 
 # lista dos campos privados
-lista_campos_privados = ["pecas"]
+lista_campos_privados = ["pecas","nif"]
 
 def MenuClientes():
     """Submenu para gerir as fichas dos clientes"""
@@ -22,6 +19,7 @@ def MenuClientes():
     while op != 5:
         op = utils.Menu(["Adicionar","Listar","Editar","Apagar","Voltar"],"Menu ficha clientes")
         if op == 5:
+            GuardarDados()
             break
         if op == 1:
             Adicionar()
@@ -69,7 +67,7 @@ def Adicionar():
 
         modelo = utils.ler_string(4,"Introduza a marca/modelo do veículo: ")
 
-        novo = {"matricula": matricula, "modelo": modelo, "pecas":""}
+        novo = {"matricula": matricula, "modelo": modelo, "pecas":"","nif":ficha["nif"]}
 
         # adicionar o novo carro a lista dos carros da ficha do cliente
         ficha["veiculos"].append(novo)
@@ -82,6 +80,9 @@ def Adicionar():
         if numero in proprietario:
             print("Nome invalido! O nome não pode conter números.")
             return
+
+    # pedir o nif do proprietario
+    nif = utils.ler_numero_inteiro("Introduza o nif: ")
 
     # pedir a matricula do carro
     matricula = utils.ler_string(8,"Introduza a matricula do veículo (aa-bb-cc): ")
@@ -102,7 +103,8 @@ def Adicionar():
     modelo = utils.ler_string(4,"Introduza a marca/modelo do veículo: ")
 
     # criar o novo dicionario
-    novo = {"proprietario":proprietario,"veiculos":[{"matricula": matricula, "modelo": modelo,"estado": "Em espera","pecas":""}]}
+    # retirei o campo estado do carro TODO
+    novo = {"proprietario":proprietario,"nif":nif,"veiculos":[{"matricula": matricula, "modelo": modelo,"pecas":"","nif":nif}]}
     
     # colocar o novo dicionario na lista dos carros
     clientes.append(novo)
@@ -240,3 +242,72 @@ def PesquisarCarro(ficha):
         op = utils.ler_string(1,f"Qual carro deseja - {carro["modelo"]} s/n? :")
         if op in "sS":
             return carro
+        
+def GuardarDados():
+    global clientes
+    global todas_matriculas
+    # primeiro guardar os dados dos carros
+
+    lista_carros = []
+    # criar uma lista sem referencias para dicionarios de outras listas
+    for ficha in clientes:
+        for carro in ficha["veiculos"]:
+            #substituir a referencia para a lista de leitores por o id e dos livros
+            novo = {"modelo":carro["modelo"],
+                    "matricula":carro["matricula"],
+                    "pecas":carro["pecas"],
+                    "nif":carro["nif"]}
+            lista_carros.append(novo)
+
+    with open("Carros.dat","wb") as ficheiro:
+        pickle.dump(lista_carros,ficheiro)
+
+    lista_proprietario = []
+    # criar uma lista sem referencias para dicionarios de outras listas
+    for ficha in clientes:
+        #substituir a referencia para a lista de leitores por o id e dos livros
+        novo = {"proprietario":ficha["proprietario"],
+                "nif":ficha["nif"]}
+        lista_proprietario.append(novo)
+        print(ficha)
+
+    with open("Proprietarios.dat","wb") as ficheiro:
+        pickle.dump(lista_proprietario,ficheiro)
+
+    # guardar a lista de matriculas já registradas
+    lista_matriculas = []
+
+    for matricula in todas_matriculas:
+        lista_matriculas.append(matricula)
+
+    with open("matriculas.dat","wb") as ficheiro:
+        pickle.dump(lista_matriculas,ficheiro)
+
+def LerDados():
+    global clientes
+    global todas_matriculas
+
+    lista_carros = []
+    lista_proprietarios = []
+
+    if os.path.exists("Carros.dat") == False:
+        return
+    
+    with open("Carros.dat","rb") as ficheiro:
+        lista_carros = pickle.load(ficheiro)
+
+    with open("Proprietarios.dat","rb") as ficheiro:
+        lista_proprietarios = pickle.load(ficheiro)
+
+    with open("matriculas.dat","rb") as ficheiro_matriculas:
+        todas_matriculas = pickle.load(ficheiro_matriculas)
+    
+    # criar a lista dos clientes novamente
+
+    for proprietario in lista_proprietarios:
+        lista_carros_proprietario = []
+        for carro in lista_carros:
+            if carro["nif"] == proprietario["nif"]:
+                lista_carros_proprietario.append(carro)
+                novo = {"proprietario":proprietario["proprietario"],"nif":proprietario["nif"],"veiculos":lista_carros_proprietario}
+                clientes.append(novo)

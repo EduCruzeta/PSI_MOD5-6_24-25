@@ -2,7 +2,7 @@
 Módulo de gestão dos livros
 """
 import utils
-import os
+import os , pickle
 # lista dos livros
 livros = []
 
@@ -171,3 +171,14 @@ def Pesquisar():
         if pesquisa.lower() in livro[campo].lower():
             l_resultados.append(livro)
     return l_resultados
+
+def GuardarDados():
+    with open("livros.dat","wb") as ficheiro:
+        pickle.dump(livros,ficheiro)
+
+def LerDados():
+    global livros
+    if os.path.exists("livros.dat") == False:
+        return
+    with open("livros.dat","rb") as ficheiro:
+        livros = pickle.load(ficheiro)

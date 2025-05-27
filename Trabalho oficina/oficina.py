@@ -2,14 +2,15 @@
 Módulo responsável pela gestão da oficina
 """
 
-import utils, os, fichas_clientes
+import utils, os, fichas_clientes, Pecas, pickle
 
 # lista onde vão ficar os carros que estão na oficina
-manutencoes = [{"proprietario":"joão alves","modelo":"Toyota Corolla","matricula":"AA-MM-hh","pecas":"Troca de óleo"}]# tirar o modelo nao vale a pena
+manutencoes = []
 
 def MenuOficina():
     """Submenu para gerir a oficina"""
     os.system("cls")
+    Ler()
     op = 0
     while op != 3:
         op = utils.Menu(["Pedir manutenção","Levantar carro","Voltar"],"Menu Carros")
@@ -50,6 +51,7 @@ def LevantarCarro():
         # retirar o carro da lista de manutenções
         manutencoes.remove(carro)
         print("Obrigado por confiar em nós volte sempre.")
+        Guardar()
 
 def PedirManutencao():
     """Função para o utilizador pedir oque deseja fazer no carro"""
@@ -78,21 +80,45 @@ def PedirManutencao():
             print("O carro ja está em manutenção.")
             return
 
-    # perguntar oque vai fazer na oficina   
     op = "s"
+    lista_pecas = Pecas.lista_pecas
+    lista_nome_peca = []
+    lista_valor_peca = []
     pecas_usar = []
+    preco_pagar = 0
+
+    # lista apenas o nome da peça e o valor
+    for linha in lista_pecas:
+        lista_nome_peca.append(linha["peça"])
+        lista_valor_peca.append(float(linha["preço"]))
+
+    if not lista_pecas:
+        print("Ainda não tem peças disponiveis")
+        return
+    #-------------------------------------------------------------------------------------------------------------
     while op in "sS":
         # introduzir oque deseja fazer na oficina
-        escolha = utils.Menu(["Troca de óleo","Revisão geral","Troca de pneus"],"Escolha: ")
-        if escolha == 1:
-            pecas_usar.append("Troca de óleo")
-        if escolha == 2:
-            pecas_usar.append("Revisão geral")
-        if escolha == 3:
-            pecas_usar.append("Troca de pneus")
-        # verificar se quer fazer mais alterações
-        op = utils.ler_string(1,f"Tem as seguintas peças {set(pecas_usar)} Deseja fazer mais alterações s/n: ")
+        escolha = utils.Menu(lista_nome_peca,"Escolha: ")
+        
+        # verificar se é aquela peça
+        # alteração do op 
+        opcao = utils.ler_string(1,f"Deseja a seguinte peça {lista_nome_peca[escolha-1]} no valor de {lista_valor_peca[escolha-1]}€ s/n: ")
 
+        if opcao in "sS":
+            if lista_nome_peca[escolha-1] not in pecas_usar:
+                #verificar se tem stock ou alterar o stock da peça usada
+                Pecas.Retirarstock(lista_nome_peca[escolha-1],1)
+                
+                pecas_usar.append(lista_nome_peca[escolha-1])
+                preco_pagar += lista_valor_peca[escolha-1]
+
+                # verificar se quer fazer mais alterações
+                # alteração do op 
+                op = utils.ler_string(1,f"Tem as seguintes peças {(pecas_usar)} no valor de {round(preco_pagar,2)}€ Deseja fazer mais alterações s/n: ")
+            else:
+                print("A peça ja está na sua lista")
+    #---------------------------------------------------------------------------------------------------------
+    
     # passar a lista para um set para evitar repetições
     pecas_usar = set(pecas_usar)
 
@@ -103,3 +129,17 @@ def PedirManutencao():
     novo = {"proprietario":ficha["proprietario"],"matricula":carro["matricula"],"modelo":carro["modelo"],"pecas":pecas_usar}
     manutencoes.append(novo)
     print("Registado com sucesso.")
+    Guardar()
+
+def Guardar():
+    with open("Marcacoes.dat","wb") as ficheiro:
+        pickle.dump(manutencoes,ficheiro)
+
+def Ler():
+    global manutencoes
+
+    if os.path.exists("Marcacoes.dat") == False:
+        return
+    
+    with open("Marcacoes.dat","rb") as ficheiro:
+        manutencoes = pickle.load(ficheiro)

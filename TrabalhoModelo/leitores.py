@@ -2,7 +2,7 @@
 Módulo de gestão dos leitores
 """
 import utils
-import os
+import os, pickle
 # lista dos leitores
 leitores = []
 
@@ -147,3 +147,14 @@ def Pesquisar():
         if pesquisa.lower() in leitor["nome"].lower():
             l_resultados.append(leitor)
     return l_resultados
+
+def GuardarDados():
+    with open("leitores.dat","wb") as ficheiro:
+        pickle.dump(leitores,ficheiro)
+
+def LerDados():
+    global leitores
+    if os.path.exists("leitores.dat") == False:
+        return
+    with open("leitores.dat","rb") as ficheiro:
+        leitores = pickle.load(ficheiro)

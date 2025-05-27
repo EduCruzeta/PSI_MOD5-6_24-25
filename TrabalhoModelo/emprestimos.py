@@ -4,7 +4,7 @@ Módulo Empréstimos e devoluções
 
 import utils, livros, leitores
 from datetime import datetime,timedelta
-import os
+import os , pickle
 
 # livro ({}), leitor({}), data_emprestimo, data_devolução, estado
 emprestimos = []
@@ -132,3 +132,38 @@ def Listar():
     for emp in emprestimos:
         if op in "tT" or (op in "cC" and emp["estado"] == True):
             print(f"{emp["livro"]["titulo"]} {emp["leitor"]["nome"]} {emp["estado"]}")
+
+def GuardarDados():
+    lista_ficheiro = []
+    # criar uma lista sem referencias para dicionarios de outras listas
+    for e in emprestimos:
+        #substituir a referencia para a lista de leitores por o id e dos livros
+        novo = {"id_leitor" : e["leitor"]["id"],
+                "id_livro" : e["livro"]["id"],
+                  "data_emprestimo" : e["data_emprestimo"],
+                  "data_devolucao" : e["data_devolucao"],
+                  "estado":e["estado"]}
+        lista_ficheiro.append(novo)
+
+    with open("emprestimos.dat","wb") as ficheiro:
+        pickle.dump(lista_ficheiro,ficheiro)
+
+def LerDados():
+    global emprestimos
+    emprestimos = []
+    lista_ficheiro = []
+    if os.path.exists("emprestimos.dat") == False:
+        return
+    with open("emprestimos.data","rb") as ficheiro:
+        lista_ficheiro = pickle.load(ficheiro)
+    
+    # criar a lista emprestimos com as referencias para livros e leitores
+
+    for e in lista_ficheiro:
+        novo = {"leitor" : leitores.Get_leitores(e["id_leitor"]),
+                "livro" : livros.Get_livro(e["id_livro"]),
+                  "data_emprestimo" : e["data_emprestimo"],
+                  "data_devolucao" : e["data_devolucao"],
+                  "estado":e["estado"]}
+        
+        emprestimos.append(novo)
